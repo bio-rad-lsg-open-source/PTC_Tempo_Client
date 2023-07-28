@@ -1,0 +1,9 @@
+[submodule "3rdParty/cpp-httplib"]
+	path = 3rdParty/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib.git
+[submodule "3rdParty/CLI11"]
+	path = 3rdParty/CLI11
+	url = https://github.com/CLIUtils/CLI11.git
+[submodule "3rdParty/nlohmann/json"]
+	path = 3rdParty/nlohmann/json
+	url = https://github.com/nlohmann/json.git

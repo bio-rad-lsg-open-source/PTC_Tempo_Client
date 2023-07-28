@@ -1,0 +1,55 @@
+pipeline {
+    agent {
+        label 'C2000-Linux-v1.4'
+    }
+    options { timestamps () }
+    parameters {
+        string(name: 'BuildType', defaultValue: 'BT_CI', description: 'Enter the build type here.')
+        gitParameter (name: 'Branch', description: 'Select the branch name.', type: 'Branch', defaultValue: 'master', sortMode: 'ASCENDING', listSize: '0', branchFilter: 'origin/(.*)')
+    }
+    environment {
+        VerNumber1 = '0'
+        VerNumber2 = '9'
+        VerNumber3 = '0'
+        VerNumber4 = "${env.BUILD_NUMBER}"
+        BuildVer="$VerNumber1.$VerNumber2.$VerNumber3.$VerNumber4"
+
+        RepoPath = 'https://github.com/lsgsw/PTC_Tempo_Client.git'
+        BranchName = "${env.Branch}"
+        BuildType = "${params.BuildType}"
+        OutputFileName = "PCR_Touch_b${BranchName}_${BuildType}_${VerNumber1}.${VerNumber2}.${VerNumber3}.${VerNumber4}_c${GIT_SHA_SHORT}.deb"
+
+        
+
+        GIT_SHA_SHORT = """${sh(
+            returnStdout: true,
+            script: 'git rev-parse --short=8 ${GIT_COMMIT}'
+        )}""".trim()
+    }
+    stages {
+        stage('Prepare...') {
+            steps {
+                buildName "#${env.BUILD_NUMBER}, ${env.BranchName} gc-${env.GIT_SHA_SHORT}"
+            }
+        }
+
+        stage('Build...') {
+            steps {
+                sh 'chmod +x -R ./infra_scripts/'
+            }
+        }
+        stage('Code Analysis...') {
+            steps {
+                sh './infra_scripts/code-analysis.sh'
+            }
+        }
+    }
+    post {
+       always {
+            recordIssues tool: clangTidy(), enabledForFailure: true, qualityGates:[[threshold: 1, type: 'TOTAL', unstable: true]]
+        }
+        cleanup {
+            cleanWs()
+        }
+    }
+}

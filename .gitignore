@@ -1,0 +1,29 @@
+
+build/\.metadata/
+.project
+
+# Personal make file settings.
+CMakeLists.txt.user
+
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+
+/dox
+
+.vs/
+out/
+.idea
+.DS_Store
+
+install/
+cmake-build-debug
+cmake-build-release
