@@ -1,6 +1,0 @@
-{
-  "display": "json",
-  "instrument": "http://localhost:8080",
-  "interval": 5,
-  "password": "password"
-}
